@@ -1,0 +1,74 @@
+{
+    "name": "QualityInput",
+    "maps": [
+        {
+            "name": "QualitySettings",
+            "id": "43afb0cd-dafd-4bc4-a1c8-5520422d2d49",
+            "actions": [
+                {
+                    "name": "SetLevel0",
+                    "type": "Button",
+                    "id": "c2cd04f0-d81a-4d24-9e69-3593ac92eda2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetLevel1",
+                    "type": "Button",
+                    "id": "3497bf1d-b9a6-4622-95e6-568227ea4e45",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetLevel2",
+                    "type": "Button",
+                    "id": "2aa2018e-6390-4774-a2b3-45eddaf8ffed",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d8c5bdc5-35c1-49d8-a767-9e3b3b588a06",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetLevel0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6563a8f-3022-4ca1-9224-438e4444f92c",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetLevel1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e3f5fac-bc58-4880-a105-08bf6f2671db",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetLevel2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+// use new unity input system
+using UnityEngine.InputSystem;
 
 public class MilesQuality : MonoBehaviour
 {
@@ -15,10 +17,38 @@ public class MilesQuality : MonoBehaviour
         qualityInfo = GetQualityInfo();
     }
 
+    void Update()
+    {
+        qualityInfo = GetQualityInfo();
+    }
+
     void OnGUI()
     {
         GUILayout.Label(qualityInfo, qualityInfoStyle);
     }
+
+    public void SetLevel0(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed)
+        {
+            QualitySettings.SetQualityLevel(0);
+        }
+    }
+    public void SetLevel1(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed)
+        {
+            QualitySettings.SetQualityLevel(1);
+        }
+    }
+    public void SetLevel2(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed)
+        {
+            QualitySettings.SetQualityLevel(2);
+        }
+    }
+
 
     static string GetQualityInfo()
     {

@@ -58,7 +58,6 @@ QualitySettings:
     - Nintendo Switch
     - Standalone
     - Android
-    - iPhone
   - serializedVersion: 3
     name: Mobile High
     pixelLightCount: 2
