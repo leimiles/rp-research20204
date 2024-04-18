@@ -175,7 +175,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: 2
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -871,7 +871,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 160766617}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.000007599592, y: -0.000019699335, z: -0.07952148, w: 0.99683315}
+  m_LocalRotation: {x: -0.00000758469, y: -0.000019699333, z: -0.079521485, w: 0.99683315}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13971,7 +13971,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121339695}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.28898686, y: 0.6318452, z: -0.2703698, w: 0.6664521}
+  m_LocalRotation: {x: 0.28898686, y: 0.63184524, z: -0.2703698, w: 0.66645217}
   m_LocalPosition: {x: 31.173388, y: -27.560982, z: 1.4454241}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
