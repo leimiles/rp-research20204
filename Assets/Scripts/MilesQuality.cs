@@ -24,7 +24,7 @@ public class MilesQuality : MonoBehaviour
 
     void OnGUI()
     {
-        GUILayout.Label(qualityInfo, qualityInfoStyle);
+        //GUILayout.Label(qualityInfo, qualityInfoStyle);
     }
 
     public void SetLevel0(InputAction.CallbackContext callbackContext)
