@@ -10,34 +10,34 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         public VolumeProfile _baseProfile;
         public static Volume vol;
         public static GameObject volumeHolder;
-        
+
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            if(volumeHolder == null)
+            if (volumeHolder == null)
             {
                 volumeHolder = new GameObject("[DefaultVolume]");
                 vol = volumeHolder.AddComponent<Volume>();
                 vol.isGlobal = true;
                 volumeHolder.hideFlags = HideFlags.HideAndDontSave;
             }
-            
-            
+
+
             if (vol && _baseProfile)
             {
                 vol.sharedProfile = _baseProfile;
             }
         }
-        
+
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            
+
         }
 
         public override void OnFinishCameraStackRendering(CommandBuffer cmd)
         {
             if (vol)
             {
-                //vol.sharedProfile = null;    
+                //vol.sharedProfile = null;
             }
         }
     }
@@ -53,8 +53,8 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         {
             GlobalVolumePass.vol.sharedProfile = null;
         }
-        
-        
+
+
         m_ScriptablePass = new GlobalVolumePass
         {
             // Configures where the render pass should be injected.
@@ -67,8 +67,8 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
     // This method is called when setting up the renderer once per-camera.
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        
-        if(GlobalVolumePass.volumeHolder == null)
+
+        if (GlobalVolumePass.volumeHolder == null)
         {
             var old = GameObject.Find("[DefaultVolume]");
             if (Application.isPlaying)
@@ -82,6 +82,6 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         }
         renderer.EnqueuePass(m_ScriptablePass);
     }
-    
-    
+
+
 }

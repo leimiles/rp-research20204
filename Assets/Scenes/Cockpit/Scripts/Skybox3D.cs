@@ -10,22 +10,22 @@ public class _3DSkybox : MonoBehaviour
     private _3DSkyboxPass pass;
 
     private DrawObjectsPass drawPass;
-    
+
     public LayerMask mask;
 
     private FilteringSettings filterOpaqueSettings = FilteringSettings.defaultValue;
     private FilteringSettings filterTransparentSettings = FilteringSettings.defaultValue;
-    
+
     private RenderStateBlock renderStateBlock;
 
     public int stencilRef;
-    
+
     private StencilState stencilState;
 
     public Material depthClearMat;
 
     public float scale = 64;
-    
+
     private void OnEnable()
     {
         pass ??= new _3DSkyboxPass();
@@ -37,14 +37,14 @@ public class _3DSkybox : MonoBehaviour
         filterOpaqueSettings = new FilteringSettings(RenderQueueRange.opaque, mask.value);
         filterTransparentSettings = new FilteringSettings(RenderQueueRange.transparent, mask.value);
         renderStateBlock = new RenderStateBlock(RenderStateMask.Stencil);
-        
+
         stencilState = StencilState.defaultValue;
         stencilState.enabled = true;
         stencilState.SetCompareFunction(CompareFunction.Equal);
-        
+
         renderStateBlock.stencilReference = stencilRef;
         renderStateBlock.stencilState = stencilState;
-        
+
         // setup callback
         RenderPipelineManager.beginCameraRendering += OnBeginCamera;
         RenderPipelineManager.endCameraRendering += EndCamera;
@@ -63,11 +63,11 @@ public class _3DSkybox : MonoBehaviour
         {
             return;
         }
-        
+
         if (pass == null) return;
 
         if (cam.cameraType != CameraType.Game && cam.cameraType != CameraType.SceneView) return;
-        
+
         pass.filterOpaqueSettings = filterOpaqueSettings;
         pass.filterTransparentSettings = filterTransparentSettings;
         pass.renderStateBlock = renderStateBlock;
@@ -76,11 +76,11 @@ public class _3DSkybox : MonoBehaviour
 
         // Do transform
         TransformSkybox(cam);
-        
+
         // inject pass
         cam.GetUniversalAdditionalCameraData().scriptableRenderer.EnqueuePass(pass);
     }
-    
+
     private void EndCamera(ScriptableRenderContext arg1, Camera arg2)
     {
         transform.position = Vector3.zero;
@@ -90,18 +90,18 @@ public class _3DSkybox : MonoBehaviour
     private void TransformSkybox(Camera cam)
     {
         if (cam.cameraType == CameraType.SceneView) return;
-        
-        var offset = cam.transform.position * (1 - (1/scale));
+
+        var offset = cam.transform.position * (1 - (1 / scale));
 
         transform.position = offset;
-        transform.localScale = Vector3.one * (1/scale); 
+        transform.localScale = Vector3.one * (1 / scale);
     }
 
     private class _3DSkyboxPass : ScriptableRenderPass
     {
         public FilteringSettings filterOpaqueSettings;
         public FilteringSettings filterTransparentSettings;
-        
+
         public RenderStateBlock renderStateBlock;
 
         public Material depthClearMat;
@@ -110,7 +110,7 @@ public class _3DSkybox : MonoBehaviour
         {
             new("SRPDefaultUnlit"), new("UniversalForward"), new("UniversalForwardOnly")
         };
-        
+
         public _3DSkyboxPass()
         {
             profilingSampler = new ProfilingSampler(nameof(_3DSkyboxPass));
@@ -122,7 +122,7 @@ public class _3DSkybox : MonoBehaviour
 
             // Clear the depth values
             var cmd = CommandBufferPool.Get("3D Skybox");
-            
+
             if (depthClearMat != null)
             {
                 CoreUtils.DrawFullScreen(cmd, depthClearMat);
@@ -157,6 +157,6 @@ public class _3DSkybox : MonoBehaviour
         var c = Color.red;
         c.a = 0.2f;
         Gizmos.color = c;
-        Gizmos.DrawFrustum(Vector3.zero, cam.fieldOfView, cam.farClipPlane * (1f/scale), cam.nearClipPlane * (1f/scale), cam.aspect);
+        Gizmos.DrawFrustum(Vector3.zero, cam.fieldOfView, cam.farClipPlane * (1f / scale), cam.nearClipPlane * (1f / scale), cam.aspect);
     }
 }
