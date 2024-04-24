@@ -127,5 +127,62 @@ Shader "MileStudio/Test/Uber"
             }
             ENDHLSL
         }
+
+        Pass
+        {
+            Name "MilesDepth"
+            Tags { "LightMode" = "MilesDepth" }
+
+            ZWrite On   // must output z-value
+            ColorMask R // one channel output
+
+            Cull Back
+
+            HLSLPROGRAM
+
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            #pragma multi_compile_instancing
+
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
+
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            CBUFFER_START(UnityPerMaterial)
+                half4 _BaseColor;
+                half _Scale;
+            CBUFFER_END
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+            };
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output = (Varyings)0;
+                return output;
+            }
+
+            half4 frag(Varyings input) : SV_TARGET
+            {
+                return 0;
+            }
+
+            ENDHLSL
+        }
     }
 }
