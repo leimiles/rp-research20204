@@ -38,7 +38,7 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 0
