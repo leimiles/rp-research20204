@@ -14,7 +14,7 @@ Shader "MileStudio/Test/Uber"
         Pass
         {
             Name "MilesForward"
-            Tags { "LightMode" = "SRPDefaultUnlit" }
+            Tags { "LightMode" = "MilesForward" }
             //ZWrite Off
             //Blend SrcAlpha OneMinusSrcAlpha
             HLSLPROGRAM
@@ -143,10 +143,6 @@ Shader "MileStudio/Test/Uber"
             #pragma vertex vert
             #pragma fragment frag
 
-            #pragma shader_feature_local_fragment _ALPHATEST_ON
-
-            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
-
             #pragma multi_compile_instancing
 
             #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DOTS.hlsl"
@@ -174,6 +170,16 @@ Shader "MileStudio/Test/Uber"
             Varyings vert(Attributes input)
             {
                 Varyings output = (Varyings)0;
+                UNITY_SETUP_INSTANCE_ID(input);
+                VertexPositionInputs vpi = GetVertexPositionInputs(input.positionOS.xyz);
+                output.positionCS = vpi.positionCS;
+
+                #if UNITY_REVERSED_Z
+                    output.positionCS.z = min(output.positionCS.z, UNITY_NEAR_CLIP_VALUE);
+                #else
+                    output.positionCS.z = max(output.positionCS.z, UNITY_NEAR_CLIP_VALUE);
+                #endif
+
                 return output;
             }
 

@@ -23,10 +23,13 @@ public class MileSkyFeature : ScriptableRendererFeature
         }
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            var cmd = CommandBufferPool.Get("MileSky");
-            cmd.DrawMesh(skyMesh, localMatrix, skyMaterial);
-            context.ExecuteCommandBuffer(cmd);
-            cmd.Clear();
+            if (skyMaterial != null && skyMesh != null)
+            {
+                var cmd = CommandBufferPool.Get("DrawMileSky");
+                cmd.DrawMesh(skyMesh, localMatrix, skyMaterial);
+                context.ExecuteCommandBuffer(cmd);
+                cmd.Clear();
+            }
         }
     }
     [SerializeField]
