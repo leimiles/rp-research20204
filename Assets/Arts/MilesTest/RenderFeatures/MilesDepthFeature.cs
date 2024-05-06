@@ -19,11 +19,6 @@ public class MilesDepthFeature : ScriptableRendererFeature
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            ExecutePass(context, ref renderingData);
-        }
-
-        private static void ExecutePass(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
             m_DrawingSettings = RenderingUtils.CreateDrawingSettings(k_ShaderTagId, ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
             context.DrawRenderers(renderingData.cullResults, ref m_DrawingSettings, ref m_FilteringSettings);
         }
