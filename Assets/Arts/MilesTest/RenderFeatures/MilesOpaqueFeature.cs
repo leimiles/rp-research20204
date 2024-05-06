@@ -4,27 +4,35 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class MilesDepthFeature : ScriptableRendererFeature
+public class MilesOpaqueFeature : ScriptableRendererFeature
 {
-    class MilesDepthPass : ScriptableRenderPass
+    class MilesOpaquePass : ScriptableRenderPass
     {
-        private static readonly ShaderTagId k_ShaderTagId = new ShaderTagId("MilesDepth");
+        private static readonly ShaderTagId k_ShaderTagId = new ShaderTagId("MilesForward");
         static FilteringSettings m_FilteringSettings;
         static DrawingSettings m_DrawingSettings;
-        private RTHandle destinationRT;
-        public MilesDepthPass()
+        public MilesOpaquePass()
         {
             m_FilteringSettings = new FilteringSettings(RenderQueueRange.opaque, -1);
-            renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
+            renderPassEvent = RenderPassEvent.BeforeRenderingSkybox;
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             m_DrawingSettings = RenderingUtils.CreateDrawingSettings(k_ShaderTagId, ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
+            context.DrawRenderers(renderingData.cullResults, ref m_DrawingSettings, ref m_FilteringSettings);
         }
+
+        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        {
+            base.Configure(cmd, cameraTextureDescriptor);
+            // todo: why this render pass can't invalidate its depth?
+
+        }
+
     }
 
-    MilesDepthPass milesDepthPass;
+    MilesOpaquePass milesDepthPass;
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
@@ -33,6 +41,6 @@ public class MilesDepthFeature : ScriptableRendererFeature
 
     public override void Create()
     {
-        milesDepthPass = new MilesDepthPass();
+        milesDepthPass = new MilesOpaquePass();
     }
 }

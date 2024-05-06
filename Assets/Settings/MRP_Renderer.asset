@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5182050916556954390
+--- !u!114 &-451406242038566289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,26 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5140960fcbb7d47b8a2eec1e16cc2fd4, type: 3}
-  m_Name: MilesDepthFeature
+  m_Script: {fileID: 11500000, guid: de6f64852edba4888a3775bc3a39cf24, type: 3}
+  m_Name: MilesOpaqueFeature
   m_EditorClassIdentifier: 
   m_Active: 1
---- !u!114 &-2642244129268242368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3b01e9f74c6349f0a047bbbdd7d751c, type: 3}
-  m_Name: MileSkyFeature
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  skyMesh: {fileID: 4300000, guid: c2f82bbf7a508446fb03d1fc85245162, type: 2}
-  skySize: 55555
-  skyMaterial: {fileID: 2100000, guid: 6621f8813f73d43d58435fc2c33c6dae, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,9 +29,8 @@ MonoBehaviour:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
-  - {fileID: -5182050916556954390}
-  - {fileID: -2642244129268242368}
-  m_RendererFeatureMap: eaa4a2a625a815b840e81ab1f6dc54db
+  - {fileID: -451406242038566289}
+  m_RendererFeatureMap: 6fb2e51d6a48bcf9
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -80,8 +63,8 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_ShadowTransparentReceive: 0
+  m_RenderingMode: 2
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
