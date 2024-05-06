@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5140960fcbb7d47b8a2eec1e16cc2fd4, type: 3}
   m_Name: MilesDepthFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
 --- !u!114 &-2642244129268242368
 MonoBehaviour:
   m_ObjectHideFlags: 0

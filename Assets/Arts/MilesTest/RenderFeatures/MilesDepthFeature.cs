@@ -9,13 +9,12 @@ public class MilesDepthFeature : ScriptableRendererFeature
     class MilesDepthPass : ScriptableRenderPass
     {
         private static readonly ShaderTagId k_ShaderTagId = new ShaderTagId("MilesDepth");
-
         static FilteringSettings m_FilteringSettings;
+        static DrawingSettings m_DrawingSettings;
         public MilesDepthPass()
         {
-            base.profilingSampler = new ProfilingSampler(nameof(MilesDepthPass));
-            m_FilteringSettings = new FilteringSettings(RenderQueueRange.opaque, 0);
-            base.renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
+            m_FilteringSettings = new FilteringSettings(RenderQueueRange.opaque, -1);
+            renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -25,14 +24,8 @@ public class MilesDepthFeature : ScriptableRendererFeature
 
         private static void ExecutePass(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            var cmd = CommandBufferPool.Get("DrawMilesDepth");
-            context.ExecuteCommandBuffer(cmd);
-            cmd.Clear();
-            var drawSettings = RenderingUtils.CreateDrawingSettings(k_ShaderTagId, ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
-            drawSettings.perObjectData = PerObjectData.None;
-            context.DrawSkybox(renderingData.cameraData.camera);
-            context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref m_FilteringSettings);
-
+            m_DrawingSettings = RenderingUtils.CreateDrawingSettings(k_ShaderTagId, ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
+            context.DrawRenderers(renderingData.cullResults, ref m_DrawingSettings, ref m_FilteringSettings);
         }
     }
 
