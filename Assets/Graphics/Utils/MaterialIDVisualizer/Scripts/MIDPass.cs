@@ -17,7 +17,7 @@ class MIDPass : ScriptableRenderPass
         new("SRPDefaultUnlit"),
         new("UniversalForwardOnly")
     };
-    FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.all);
+    static FilteringSettings filteringSettings = new FilteringSettings(RenderQueueRange.all);
     private ProfilingSampler m_ProfilingSampler;
     public MIDPass(Material material)
     {
