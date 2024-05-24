@@ -77,3 +77,5 @@ Build_BurstDebugInformation_DoNotShip
 Build_BurstDebugInformation_DoNotShip
 .DS_Store
 Assets/SceneDependencyCache
+Assets/Resources
+Assets/Resources.meta
