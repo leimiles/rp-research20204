@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 0
   companyName: MileStudio
-  productName: rp-research2024
+  productName: Rendering
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -260,7 +260,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.unity.template.urpsample
     Standalone: com.unity.template.urp-sample
-    iPhone: com.MileStudio.rp-research2024
+    iPhone: com.MileStudio.Rendering
   buildNumber:
     Standalone: 0
     VisionOS: 0
