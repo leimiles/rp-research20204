@@ -7,9 +7,7 @@ using UnityEngine.Rendering.Universal;
 
 class MIDPass : ScriptableRenderPass
 {
-    private MaterialPropertyBlock materialPropertyBlock;
     private Material m_OverrideMaterial;
-    public Renderer[] renderers;
     List<ShaderTagId> shaderTagIds = new List<ShaderTagId>
     {
         new("UniversalForward"),

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6f64852edba4888a3775bc3a39cf24, type: 3}
   m_Name: MilesOpaqueFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,8 +30,7 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -451406242038566289}
-  - {fileID: 3536379558566490788}
-  m_RendererFeatureMap: 6fb2e51d6a48bcf9a4f24ed378be1331
+  m_RendererFeatureMap: 6fb2e51d6a48bcf9
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -53,7 +52,7 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 0

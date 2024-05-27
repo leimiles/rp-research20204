@@ -60,7 +60,7 @@ public class MIDManager
         }
         return fullVariantsName;
     }
-
+    /*
     public static void SwapColor(MIDFeature.MIDMode mode)
     {
         switch (mode)
@@ -78,6 +78,7 @@ public class MIDManager
                 break;
         }
     }
+    */
     static void RigisterShaderVariant(string shaderVariants, GameObject gameObject)
     {
         if (variantsSet == null)
