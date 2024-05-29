@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SelectObjects : EditorWindow
 {
-    private float minSize = 0f;
-    private float maxSize = 0f;
+    private float m_MinSize = 0f;
+    private float m_MaxSize = 0f;
 
     List<Object> selectedObjects = new List<Object>();
 
@@ -24,8 +24,8 @@ public class SelectObjects : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("包围盒最小最大值:");
         GUILayout.Space(45);
-        minSize = EditorGUILayout.FloatField(minSize);
-        maxSize = EditorGUILayout.FloatField(maxSize);
+        m_MinSize = EditorGUILayout.FloatField(m_MinSize);
+        m_MaxSize = EditorGUILayout.FloatField(m_MaxSize);
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
@@ -41,19 +41,43 @@ public class SelectObjects : EditorWindow
         {
             SelectMeshFilter();
         }
+        if (GUILayout.Button("Mesh Filters By Mesh"))
+        {
+            if (targetMesh != null)
+            {
+                SelectMeshFilter(targetMesh);
+            }
+        }
+        targetMesh = EditorGUILayout.ObjectField(targetMesh, typeof(Mesh), true) as Mesh;
+
     }
+
+    Mesh targetMesh;
 
     void SelectMeshFilter()
     {
 
         MeshFilter[] meshFilters = GameObject.FindObjectsByType<MeshFilter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        Debug.Log(meshFilters.Length);
         foreach (MeshFilter meshFilter in meshFilters)
         {
             selectedObjects.Add(meshFilter.gameObject);
         }
         Selection.objects = selectedObjects.ToArray();
 
+    }
+
+    void SelectMeshFilter(Mesh mesh)
+    {
+        MeshFilter[] meshFilters = GameObject.FindObjectsByType<MeshFilter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            if (meshFilter != null && meshFilter.sharedMesh == targetMesh)
+            {
+                selectedObjects.Add(meshFilter.gameObject);
+            }
+
+        }
+        Selection.objects = selectedObjects.ToArray();
     }
 
     // 选择场景物体
@@ -67,7 +91,7 @@ public class SelectObjects : EditorWindow
             {
                 float size = renderer.bounds.size.magnitude;
 
-                if (!(minSize == 0 && maxSize == 0) && (size >= minSize && size <= maxSize))
+                if (!(m_MinSize == 0 && m_MaxSize == 0) && (size >= m_MinSize && size <= m_MaxSize))
                 {
                     selectedObjects.Add(renderer.transform.gameObject);
                 }
