@@ -37,6 +37,23 @@ public class SelectObjects : EditorWindow
             selectedObjects.Clear();
             SelectObjectsWithTransform();
         }
+        if (GUILayout.Button("Mesh Filters"))
+        {
+            SelectMeshFilter();
+        }
+    }
+
+    void SelectMeshFilter()
+    {
+
+        MeshFilter[] meshFilters = GameObject.FindObjectsByType<MeshFilter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Debug.Log(meshFilters.Length);
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            selectedObjects.Add(meshFilter.gameObject);
+        }
+        Selection.objects = selectedObjects.ToArray();
+
     }
 
     // 选择场景物体
