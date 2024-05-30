@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SubsceneTest/Scenes/Main.unity
+    path: Assets/Arts/MilesTest/SubsceneTest/Scenes/Main.unity
     guid: 4559a8fa0c2294af0a7f787097cbb6f7
   - enabled: 0
-    path: Assets/Scenes/Rio/Scenes/rio.unity
+    path: Assets/Arts/MilesTest/SubsceneTest/Rio/Scenes/rio.unity
     guid: daa4dbd7b8eba42f2b44d6bbf33172e1
   - enabled: 1
-    path: Assets/Scenes/Rio/Scenes/rio 1.unity
+    path: Assets/Arts/MilesTest/SubsceneTest/Rio/Scenes/rio 1.unity
     guid: ce152d29ff6ca4de2a382e43c2f5553f
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 290a6e6411d135049940bec2237b8938, type: 2}
