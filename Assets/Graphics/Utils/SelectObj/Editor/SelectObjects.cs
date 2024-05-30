@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SelectObjects : EditorWindow
 {
-    private float m_MinSize = 0f;
-    private float m_MaxSize = 0f;
+    private float m_MinSizeRe = 0f;
+    private float m_MaxSizeRe = 0f;
 
     List<Object> selectedObjects = new List<Object>();
 
@@ -24,8 +24,8 @@ public class SelectObjects : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.Label("包围盒最小最大值:");
         GUILayout.Space(45);
-        m_MinSize = EditorGUILayout.FloatField(m_MinSize);
-        m_MaxSize = EditorGUILayout.FloatField(m_MaxSize);
+        m_MinSizeRe = EditorGUILayout.FloatField(m_MinSizeRe);
+        m_MaxSizeRe = EditorGUILayout.FloatField(m_MaxSizeRe);
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
@@ -91,7 +91,7 @@ public class SelectObjects : EditorWindow
             {
                 float size = renderer.bounds.size.magnitude;
 
-                if (!(m_MinSize == 0 && m_MaxSize == 0) && (size >= m_MinSize && size <= m_MaxSize))
+                if (!(m_MinSizeRe == 0 && m_MaxSizeRe == 0) && (size >= m_MinSizeRe && size <= m_MaxSizeRe))
                 {
                     selectedObjects.Add(renderer.transform.gameObject);
                 }
