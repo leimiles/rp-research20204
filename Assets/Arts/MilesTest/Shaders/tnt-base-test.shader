@@ -105,6 +105,10 @@ Shader "SoFunny/TNT/Test"
             void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
             {
                 inputData = (InputData)0;
+                inputData.positionWS = 0;   // no need for now
+                half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
+                inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
+                inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
             }
 
             Varyings vert(Attributes v)
