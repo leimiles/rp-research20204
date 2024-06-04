@@ -168,33 +168,25 @@ Shader "SoFunny/TNT/Test"
                 InputData inputData;
                 InitializeInputData(i, tntSurfaceData.normalTS, inputData);
 
-                //SimplePBR(inputData, tntSurfaceData);
-                half ndotv = max(dot(inputData.normalWS, inputData.viewDirectionWS), 0.0);
-                ndotv = 0.5;
+
+                //half ndotv = max(dot(inputData.normalWS, inputData.viewDirectionWS), 0.0);    // I need to fix this
+                half ndotv = 0.5;
 
                 Light light = GetMainLight();
-
-                //Mobile_PBR_ComputeDirectLightOp5()
                 half3 diffuse;
                 half3 specular;
-                // fzero means metallic reflectivity
-                //Mobile_PBR_ComputeDirectLightOp5(ndotv, 0.5h, inputData.normalWS, light.direction, inputData.viewDirectionWS, light.color, 0.5h, diffuse, specular);
-                Classic_PBR_ComputeDirectLight(
+                TNTLighting(
                     inputData.normalWS,
                     light.direction,
                     inputData.viewDirectionWS,
                     light.color,
-                    1.0h - tntSurfaceData.metalic_occlusion_roughness_emissionMask.r,       // because of white texture input by default
+                    1.0h - tntSurfaceData.metalic_occlusion_roughness_emissionMask.r, // because of white texture input by default
                     tntSurfaceData.metalic_occlusion_roughness_emissionMask.b,
                     ndotv,
                     diffuse,
                     specular);
-                //return half4((diffuse.xyz + inputData.bakedGI) * tntSurfaceData.albedo, 1.0h);
-
                 half3 finalColor = (diffuse.rgb + inputData.bakedGI) * tntSurfaceData.albedo + specular.rgb;
                 return half4(finalColor, 1.0h);
-                //return half4(inputData.normalWS, 1.0h);
-
             }
 
             ENDHLSL
