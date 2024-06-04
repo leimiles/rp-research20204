@@ -21,6 +21,7 @@ Shader "SoFunny/TNT/Test"
             HLSLPROGRAM
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "tnt-lighting.hlsl"
 
             #ifndef HAVE_VFX_MODIFICATION
@@ -46,10 +47,11 @@ Shader "SoFunny/TNT/Test"
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
+                half2 uv : TEXCOORD0;
                 half4 normalWS : TEXCOORD2;     // w = viewDir.x
                 half4 tangentWS : TEXCOORD3;    // w = viewDir.y
                 half4 bitangentWS : TEXCOORD4;  // w = viewDir.z
-                half2 uv : TEXCOORD0;
+                half3 sh : TEXCOORD5;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -87,28 +89,37 @@ Shader "SoFunny/TNT/Test"
             #endif
 
             // only what we need for tnt surface
-            struct SurfaceData
+            struct TNTSurfaceData
             {
                 half3 albedo;
                 half3 normalTS;
                 half4 metalic_occlusion_roughness_emissionMask;
             };
 
-            inline void InitializeSurfaceData(half2 uv, out SurfaceData outSurfaceData)
+            inline void InitializeTNTSurfaceData(half2 uv, out TNTSurfaceData outTNTSurfaceData)
             {
-                outSurfaceData = (SurfaceData)0;
-                outSurfaceData.albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb * _BaseColor.rgb;
-                outSurfaceData.normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uv));
-                outSurfaceData.metalic_occlusion_roughness_emissionMask = half4(0.0h, 1.0h, 0.8h, 0.0h);
+                outTNTSurfaceData = (TNTSurfaceData)0;
+                outTNTSurfaceData.albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb * _BaseColor.rgb;
+                outTNTSurfaceData.normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uv));
+                outTNTSurfaceData.metalic_occlusion_roughness_emissionMask = half4(0.0h, 1.0h, 0.8h, 0.0h);
             }
 
             void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
             {
                 inputData = (InputData)0;
-                inputData.positionWS = 0;   // no need for now
+                //inputData.positionWS = 0;   // no need for now
                 half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
                 inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
                 inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
+                inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
+                inputData.viewDirectionWS = SafeNormalize(viewDirWS);
+                //inputData.shadowCoord = 0; // no need for now
+                //inputData.fogCoord = 0; //    no need for now
+                //inputData.vertexLighting = 0    // no need for now
+                inputData.bakedGI = SampleSHPixel(input.sh, inputData.normalWS);
+                //inputData.normalizedScreenSpaceUV = 0;  // no need for now
+                //inputData.shadowMask = 0;    // no need for now
+
             }
 
             Varyings vert(Attributes v)
@@ -125,6 +136,7 @@ Shader "SoFunny/TNT/Test"
                 o.normalWS = half4(vni.normalWS, viewDirWS.x);
                 o.tangentWS = half4(vni.tangentWS, viewDirWS.y);
                 o.bitangentWS = half4(vni.bitangentWS, viewDirWS.z);
+                o.sh = SampleSHVertex(o.normalWS);
                 o.positionCS = vpi.positionCS;
                 return o;
             }
@@ -133,13 +145,13 @@ Shader "SoFunny/TNT/Test"
             {
                 UNITY_SETUP_INSTANCE_ID(i);
 
-                SurfaceData surfaceData;
-                InitializeSurfaceData(i.uv, surfaceData);
+                TNTSurfaceData surfaceData;
+                InitializeTNTSurfaceData(i.uv, surfaceData);
 
                 InputData inputData;
                 InitializeInputData(i, surfaceData.normalTS, inputData);
 
-                return half4(surfaceData.albedo, 1.0h);
+                return half4(surfaceData.albedo * inputData.bakedGI, 1.0h);
             }
             ENDHLSL
         }

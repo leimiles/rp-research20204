@@ -9,7 +9,7 @@
 
 
 
-struct LightingData
+struct TNTLightingData
 {
     half3 giColor;
     half3 mainLightColor;
@@ -21,7 +21,7 @@ half3 LightingPBR()
 }
 
 // we dont' deal with alpha test for tnt base shading
-half4 CalculateFinalColor(LightingData lightingData, half3 albedo)
+half4 CalculateFinalColor(TNTLightingData lightingData, half3 albedo)
 {
     half4 lightingColor = 1;
     return lightingColor;
@@ -29,7 +29,7 @@ half4 CalculateFinalColor(LightingData lightingData, half3 albedo)
 
 half4 TNTFragment()
 {
-    LightingData lightingData = (LightingData)1;
+    TNTLightingData lightingData = (TNTLightingData)1;
     return CalculateFinalColor(lightingData, 1);
 }
 
