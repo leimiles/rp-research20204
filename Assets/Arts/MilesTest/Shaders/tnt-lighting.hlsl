@@ -9,6 +9,8 @@
 
 
 
+
+
 struct TNTLightingData
 {
     half3 giColor;
@@ -159,9 +161,9 @@ out half3 outDiffuse, out half3 outSpecular)
 
     /*
     // F,G
-    half ldoth = max( dot(lightDir, halfVec),  0.0h);
-    lvec2 FV_helper = LightingFuncGGX_FV(ldoth,roughness);
-    half FV = fZero*FV_helper.x + (1.0h-fZero)*FV_helper.y;
+    half ldoth = max(dot(lightDir, halfVec), 0.0h);
+    half2 FV_helper = LightingFuncGGX_FV(ldoth, roughness);
+    half FV = fZero * FV_helper.x + (1.0h - fZero) * FV_helper.y;
     half specular = ldoth * D * FV;
     */
 
@@ -173,13 +175,14 @@ out half3 outDiffuse, out half3 outSpecular)
     half k = alpha * 0.5h;
 
     //classic Schlick ggx
-    
+
     half G_V = ndotv / (ndotv * (1.0h - k) + k);
     half G_L = ndotl / (ndotl * (1.0h - k) + k);
     half G = (G_V * G_L);
 
     half specular = (D * fresnel * G) / (4.0h * ndotv);
-    
+
+    specular = saturate(specular);
 
 
 

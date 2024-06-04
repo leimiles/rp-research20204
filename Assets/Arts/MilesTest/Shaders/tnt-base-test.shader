@@ -6,7 +6,7 @@ Shader "SoFunny/TNT/Test"
         _BaseColor ("Base Color", Color) = (1, 1, 0, 1)
         [NoScaleOffset]_BaseMap ("Base Map", 2D) = "white" { }
         [NoScaleOffset]_NormalMap ("Normal Map", 2D) = "bump" { }
-        [NoScaleOffset]_MAREMap ("Metallic AO Roughness EmissiveMask Map", 2D) = "black" { }
+        [NoScaleOffset]_MAREMap ("Non-Metallic AO Roughness EmissiveMask Map", 2D) = "white" { }
         _ST ("Scale And Offset", Vector) = (1, 1, 0, 0)
     }
 
@@ -102,7 +102,7 @@ Shader "SoFunny/TNT/Test"
                 outTNTSurfaceData = (TNTSurfaceData)0;
                 outTNTSurfaceData.albedo = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb * _BaseColor.rgb;
                 outTNTSurfaceData.normalTS = UnpackNormal(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uv));
-                outTNTSurfaceData.metalic_occlusion_roughness_emissionMask = half4(0.0h, 1.0h, 0.8h, 0.0h);
+                outTNTSurfaceData.metalic_occlusion_roughness_emissionMask = SAMPLE_TEXTURE2D(_MAREMap, sampler_MAREMap, uv);
             }
 
             void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData)
@@ -153,9 +153,9 @@ Shader "SoFunny/TNT/Test"
                 half3 reflectivity_perceptualRoughness_roughness_roughness2;
             };
 
-            half4 SimplePBR(InputData inputData, TNTSurfaceData tntSurfaceData)
+            half4 TNTFragmentPBR(InputData inputdata, TNTSurfaceData tntSurfaceData)
             {
-                return 0;
+
             }
 
             half4 frag(Varyings i) : SV_Target
@@ -170,6 +170,7 @@ Shader "SoFunny/TNT/Test"
 
                 //SimplePBR(inputData, tntSurfaceData);
                 half ndotv = max(dot(inputData.normalWS, inputData.viewDirectionWS), 0.0);
+                ndotv = 0.5;
 
                 Light light = GetMainLight();
 
@@ -178,12 +179,24 @@ Shader "SoFunny/TNT/Test"
                 half3 specular;
                 // fzero means metallic reflectivity
                 //Mobile_PBR_ComputeDirectLightOp5(ndotv, 0.5h, inputData.normalWS, light.direction, inputData.viewDirectionWS, light.color, 0.5h, diffuse, specular);
-                Classic_PBR_ComputeDirectLight(inputData.normalWS, light.direction, inputData.viewDirectionWS, light.color, 0.9h, 0.1h, ndotv, diffuse, specular);
+                Classic_PBR_ComputeDirectLight(
+                    inputData.normalWS,
+                    light.direction,
+                    inputData.viewDirectionWS,
+                    light.color,
+                    1.0h - tntSurfaceData.metalic_occlusion_roughness_emissionMask.r,       // because of white texture input by default
+                    tntSurfaceData.metalic_occlusion_roughness_emissionMask.b,
+                    ndotv,
+                    diffuse,
+                    specular);
                 //return half4((diffuse.xyz + inputData.bakedGI) * tntSurfaceData.albedo, 1.0h);
 
                 half3 finalColor = (diffuse.rgb + inputData.bakedGI) * tntSurfaceData.albedo + specular.rgb;
                 return half4(finalColor, 1.0h);
+                //return half4(inputData.normalWS, 1.0h);
+
             }
+
             ENDHLSL
         }
 
