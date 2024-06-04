@@ -129,6 +129,77 @@ out half3 outDiffuse, out half3 outSpecular)
 }
 
 
+void Classic_PBR_ComputeDirectLight(half3 normal, half3 lightDir, half3 viewDir,
+half3 lightColor, half fZero, half roughness, half ndotv,
+out half3 outDiffuse, out half3 outSpecular)
+{
+    // Compute halfway vector.
+    half3 halfVec = normalize(lightDir + viewDir);
+
+    // Compute ndotl, ndoth,  vdoth terms which are needed later.
+    half ndotl = max(dot(normal, lightDir), 0.0h);
+    half ndoth = max(dot(normal, halfVec), 0.0h);
+    half hdotv = max(dot(viewDir, halfVec), 0.0h);
+
+
+    // Compute diffuse using energy-conserving Lambert.
+    // Alternatively, use Oren-Nayar for really rough
+    // materials or if you have lots of processing power ...
+    outDiffuse = half3(ndotl, ndotl, ndotl) * lightColor;
+
+    //cook-torrence, microfacet BRDF : http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
+
+    half alpha = roughness * roughness;
+
+    //D, GGX normaal Distribution function
+    half alpha2 = alpha * alpha;
+    half sum = ((ndoth * ndoth) * (alpha2 - 1.0h) + 1.0h);
+    half denom = PI * sum * sum;
+    half D = alpha2 / denom;
+
+    /*
+    // F,G
+    half ldoth = max( dot(lightDir, halfVec),  0.0h);
+    lvec2 FV_helper = LightingFuncGGX_FV(ldoth,roughness);
+    half FV = fZero*FV_helper.x + (1.0h-fZero)*FV_helper.y;
+    half specular = ldoth * D * FV;
+    */
+
+    // Compute Fresnel function via Schlick's approximation.
+    half fresnel = fZero + (1.0h - fZero) * pow(2.0h, (-5.55473h * hdotv - 6.98316h) * hdotv);
+
+
+    //G Shchlick GGX Gometry shadowing term,  k = alpha/2
+    half k = alpha * 0.5h;
+
+    //classic Schlick ggx
+    
+    half G_V = ndotv / (ndotv * (1.0h - k) + k);
+    half G_L = ndotl / (ndotl * (1.0h - k) + k);
+    half G = (G_V * G_L);
+
+    half specular = (D * fresnel * G) / (4.0h * ndotv);
+    
+
+
+
+    /*
+
+    // UE4 way to optimise shlick GGX Gometry shadowing term
+    //http://graphicrants.blogspot.co.uk/2013/08/specular-brdf-reference.html
+    half G_V = ndotv + sqrt((ndotv - ndotv * k) * ndotv + k);
+    half G_L = ndotl + sqrt((ndotl - ndotl * k) * ndotl + k);
+    // the max here is to avoid division by 0 that may cause some small glitches.
+    half G = 1.0h / max(G_V * G_L, 0.01h);
+
+    half specular = D * fresnel * G * ndotl;
+    */
+
+
+    outSpecular = half3(specular, specular, specular) * lightColor;
+}
+
+
 
 
 #endif

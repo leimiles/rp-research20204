@@ -40,6 +40,7 @@ Shader "SoFunny/TNT/Test"
             {
                 float4 positionOS : POSITION;
                 half3 normalOS : NORMAL;
+                half4 tangentOS : TANGENT;
                 half2 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -51,7 +52,7 @@ Shader "SoFunny/TNT/Test"
                 half4 normalWS : TEXCOORD2;     // w = viewDir.x
                 half4 tangentWS : TEXCOORD3;    // w = viewDir.y
                 half4 bitangentWS : TEXCOORD4;  // w = viewDir.z
-                half3 sh : TEXCOORD5;
+                half4 sh_tangentSign : TEXCOORD5;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -109,14 +110,16 @@ Shader "SoFunny/TNT/Test"
                 inputData = (InputData)0;
                 //inputData.positionWS = 0;   // no need for now
                 half3 viewDirWS = half3(input.normalWS.w, input.tangentWS.w, input.bitangentWS.w);
+                half sign = input.sh_tangentSign.w;
+                input.bitangentWS.xyz = sign * (cross(input.normalWS.xyz, input.tangentWS.xyz));
                 inputData.tangentToWorld = half3x3(input.tangentWS.xyz, input.bitangentWS.xyz, input.normalWS.xyz);
                 inputData.normalWS = TransformTangentToWorld(normalTS, inputData.tangentToWorld);
                 inputData.normalWS = NormalizeNormalPerPixel(inputData.normalWS);
-                inputData.viewDirectionWS = SafeNormalize(viewDirWS);
+                inputData.viewDirectionWS = SafeNormalize(viewDirWS);     // do it in vertex stage
                 //inputData.shadowCoord = 0; // no need for now
                 //inputData.fogCoord = 0; //    no need for now
                 //inputData.vertexLighting = 0    // no need for now
-                inputData.bakedGI = SampleSHPixel(input.sh, inputData.normalWS);
+                inputData.bakedGI = SampleSHPixel(input.sh_tangentSign.xyz, inputData.normalWS);
                 //inputData.normalizedScreenSpaceUV = 0;  // no need for now
                 //inputData.shadowMask = 0;    // no need for now
 
@@ -129,29 +132,57 @@ Shader "SoFunny/TNT/Test"
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 VertexPositionInputs vpi = GetVertexPositionInputs(v.positionOS.xyz);
-                VertexNormalInputs vni = GetVertexNormalInputs(v.normalOS);
-                o.uv = TRANSFORM_TEX(v.texcoord, _BaseMap);
-                o.uv.xy = o.uv.xy * _ST.xy + _ST.zw;
-                half3 viewDirWS = GetWorldSpaceViewDir(vpi.positionWS);
+                VertexNormalInputs vni = GetVertexNormalInputs(v.normalOS, v.tangentOS);
+                //o.uv = TRANSFORM_TEX(v.texcoord, _BaseMap);
+                o.uv.xy = v.texcoord.xy * _ST.xy + _ST.zw;
+                half3 viewDirWS = _WorldSpaceCameraPos - vpi.positionWS;        // always perspective solution
                 o.normalWS = half4(vni.normalWS, viewDirWS.x);
                 o.tangentWS = half4(vni.tangentWS, viewDirWS.y);
                 o.bitangentWS = half4(vni.bitangentWS, viewDirWS.z);
-                o.sh = SampleSHVertex(o.normalWS);
+                o.sh_tangentSign.xyz = SampleSHVertex(o.normalWS.xyz);
+                half sign = v.tangentOS.w * unity_WorldTransformParams.w;       // dont' use it on ray-tracing
+                o.sh_tangentSign.w = sign;
                 o.positionCS = vpi.positionCS;
                 return o;
+            }
+
+            struct TNTBRDFData
+            {
+                half4 albedo_grazingTerm;
+                half3 diffuse;
+                half3 reflectivity_perceptualRoughness_roughness_roughness2;
+            };
+
+            half4 SimplePBR(InputData inputData, TNTSurfaceData tntSurfaceData)
+            {
+                return 0;
             }
 
             half4 frag(Varyings i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
 
-                TNTSurfaceData surfaceData;
-                InitializeTNTSurfaceData(i.uv, surfaceData);
+                TNTSurfaceData tntSurfaceData;
+                InitializeTNTSurfaceData(i.uv, tntSurfaceData);
 
                 InputData inputData;
-                InitializeInputData(i, surfaceData.normalTS, inputData);
+                InitializeInputData(i, tntSurfaceData.normalTS, inputData);
 
-                return half4(surfaceData.albedo * inputData.bakedGI, 1.0h);
+                //SimplePBR(inputData, tntSurfaceData);
+                half ndotv = max(dot(inputData.normalWS, inputData.viewDirectionWS), 0.0);
+
+                Light light = GetMainLight();
+
+                //Mobile_PBR_ComputeDirectLightOp5()
+                half3 diffuse;
+                half3 specular;
+                // fzero means metallic reflectivity
+                //Mobile_PBR_ComputeDirectLightOp5(ndotv, 0.5h, inputData.normalWS, light.direction, inputData.viewDirectionWS, light.color, 0.5h, diffuse, specular);
+                Classic_PBR_ComputeDirectLight(inputData.normalWS, light.direction, inputData.viewDirectionWS, light.color, 0.9h, 0.1h, ndotv, diffuse, specular);
+                //return half4((diffuse.xyz + inputData.bakedGI) * tntSurfaceData.albedo, 1.0h);
+
+                half3 finalColor = (diffuse.rgb + inputData.bakedGI) * tntSurfaceData.albedo + specular.rgb;
+                return half4(finalColor, 1.0h);
             }
             ENDHLSL
         }
