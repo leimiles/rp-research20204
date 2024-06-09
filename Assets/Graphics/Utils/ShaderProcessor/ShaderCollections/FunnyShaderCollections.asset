@@ -22,8 +22,20 @@ MonoBehaviour:
     - SHADOWS_SHADOWMASK
     - LIGHTMAP_SHADOW_MIXING
     - FOG_LINEAR
+    - _FORWARD_PLUS
+    - _ADDITIONAL_LIGHTS_VERTEX
   - shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
     keywordsToStrip:
     - _MAIN_LIGHT_SHADOWS
     - _MAIN_LIGHT_SHADOWS_CASCADE
     - _PARALLAXMAP
+    - _LIGHT_COOKIES
+    - _FORWARD_PLUS
+    - _ADDITIONAL_LIGHTS_VERTEX
+  - shader: {fileID: 4800000, guid: 0f0c0d24e780144f8b8fbed89f725828, type: 3}
+    keywordsToStrip:
+    - _PARALLAXMAP
+    - _LIGHT_COOKIES
+    - _ADDITIONAL_LIGHTS_VERTEX
+    - _MAIN_LIGHT_SHADOWS
+    - LOD_FADE_CROSSFADE
