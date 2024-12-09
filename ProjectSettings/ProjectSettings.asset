@@ -943,7 +943,7 @@ PlayerSettings:
     Android: STARTER_ASSETS_PACKAGES_CHECKED
     Nintendo Switch: STARTER_ASSETS_PACKAGES_CHECKED
     Standalone: STARTER_ASSETS_PACKAGES_CHECKED;URP_EXPERIMENTAL_TAA_ENABLE
-    iPhone: STARTER_ASSETS_PACKAGES_CHECKED
+    iPhone: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -1038,7 +1038,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 2
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 
   framebufferDepthMemorylessMode: 2
