@@ -16,7 +16,7 @@ Shader "SoFunny/F2P/Generic"
         Pass
         {
             Name "UniversalForward"
-            Tags { "LightMode" = "F2P" }
+            Tags { "LightMode" = "UniversalForward" }
 
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
